@@ -25,8 +25,41 @@
 					</table>
 				</div>
 				<div class="tab-pane" id="setting">
-					<div class="alert alert-warning">
+					<div class="alert alert-warning" id="no-input-selected-alert">
 						No element selected.
+					</div>
+					<div id="setting-input-text" class="hide">
+						<form class="form-horizontal">
+							<label for="setting-input-text-name">Field Name</label>
+							<input type="text" placeholder="Field Name" value="" name="fieldName" id="setting-input-text-name" />
+							<br><br>
+							<label for="setting-input-text-label">Field Label</label>
+							<input type="text" placeholder="Field Label" value="" name="fieldLabel" id="setting-input-text-label" />
+							<br><br>
+							<label for="setting-input-text-label">Field ID</label>
+							<input type="text" placeholder="Field ID" value="" name="fieldId" id="setting-input-text-id" />
+						</form>
+					</div>
+					<div id="setting-input-checkbox" class="hide">
+						<form class="form-horizontal">
+							<label for="setting-input-text-name">Field Name</label>
+							<input type="text" placeholder="Field Name" value="" name="fieldName" id="setting-input-text-name" />
+							<br><br>
+							<label for="setting-input-text-label">Field Label</label>
+							<input type="text" placeholder="Field Label" value="" name="fieldLabel" id="setting-input-text-label" />
+							<table class="table" id="setting-checkbox-items">
+								<thead>
+									<tr>
+										<th>ID</th>
+										<th>Value</th>
+										<th>Label</th>
+										<th>&nbsp;</th>
+									</tr>
+								</thead>
+								<tbody>
+								</tbody>
+							</table>
+						</form>
 					</div>
 				</div>
 				<div class="tab-pane" id="form">
@@ -47,6 +80,7 @@
 <script type="text/Javascript">
 	var $elementButton = $(".element-button");
 	var $formObject = $("#form-object");
+	var $selectedRow = null;
 	$elementButton.each(function() {
 		var $this = $(this);
 		$this.click(function() {
@@ -58,6 +92,7 @@
 			var inputType = $this.attr("data-input-type");
 			var $input = getInputObject(inputType);
 			if($input != null) {
+				$controlGroup.attr("data-input-type", inputType);
 				$controlLabel.attr("for", elementId);
 				$controlLabel.html(elementLabel);
 				if(inputType != 'checkbox') {
@@ -75,9 +110,28 @@
 				$formObject.append($controlGroup);
 				
 				$controlGroup.click(function() {
+					$selectedRow = $(this);
 					removeControlGroupStyles();
+					$("#no-input-selected-alert").hide();
 					$controlGroup.addClass("info");
 					$("#setting-tab-link a").click();
+					var type = $(this).attr("data-input-type");
+					$("#setting-input-text").hide();
+					if(type == 'text') {
+						$("#setting-input-text").show();
+						var originalText = $controlGroup.children("label").html();
+						$("#setting-input-text-label").val(originalText);
+						$("#setting-input-text-label").unbind("keyup");
+						$("#setting-input-text-label").keyup(function() {
+							var newVal = $("#setting-input-text-label").val();
+							$controlGroup.children("label").html(newVal);
+							$controlGroup.children("div").children("input").attr("placeholder", newVal);
+						});
+					} else if (type == 'checkbox') {
+						$("#setting-input-checkbox").show();
+						$itemsTable = $("#setting-checkbox-items");
+						
+					}
 				});
 			}
 		});
