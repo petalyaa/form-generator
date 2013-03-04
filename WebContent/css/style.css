@@ -1,0 +1,20 @@
+.form-target {
+	border : 1px solid rgb(221, 221, 221);
+	display : block;
+	height : 500px;
+	-moz-border-radius: 1em 1em 1em 1em;
+	border-radius: 1em 1em 1em 1em;
+	padding: 10px;
+}
+
+.element-group-label {
+	border-bottom: 1px solid rgb(221, 221, 221);
+	font-weight: bold;
+	margin-bottom: 15px;
+}
+.input-group {
+	padding:5px;
+}
+.element-button {
+	width : 120px;
+}
